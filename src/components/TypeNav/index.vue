@@ -1,21 +1,14 @@
 <template>
   <div class="type-nav">
             <div class="container">
+                <div @mouseenter="showItems" @mouseleave='hideItems'>
                 <h2 class="all">全部商品分类</h2>
-                <nav class="nav">
-                    <a href="###">服装城</a>
-                    <a href="###">美妆馆</a>
-                    <a href="###">尚品汇超市</a>
-                    <a href="###">全球购</a>
-                    <a href="###">闪购</a>
-                    <a href="###">团购</a>
-                    <a href="###">有趣</a>
-                    <a href="###">秒杀</a>
-                </nav>
-                <div class="sort">
+                <transition name='slide'>
+                    
+                <div class="sort" v-show="isShowItem">
                     <div class="all-sort-list2" @click="toSearch">
                         
-                        <div class="item" v-for="c1 in categoryList" :key="c1.categoryId">
+                        <div class="item" v-for="(c1,index) in categoryList" :key="c1.categoryId" :class="{active:currentIndex===index}" @mouseenter="showNextItem(index)">
                             <h3>
                                 <a href="javascript:" :data-categoryName='c1.categoryName' :data-categoryId1="c1.categoryId">{{c1.categoryName}}</a>
                             </h3>
@@ -38,14 +31,33 @@
                         </div>
                     </div>
                 </div>
+                </transition>
+                </div><nav class="nav">
+                    <a href="###">服装城</a>
+                    <a href="###">美妆馆</a>
+                    <a href="###">尚品汇超市</a>
+                    <a href="###">全球购</a>
+                    <a href="###">闪购</a>
+                    <a href="###">团购</a>
+                    <a href="###">有趣</a>
+                    <a href="###">秒杀</a>
+                </nav>
             </div>
         </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState} from 'vuex';
+import throttle from 'lodash/throttle'
 export default {
   name: 'TypeNav',
+  data(){
+      const path=this.$route.path
+      return{
+          isShowItem:path==='/',
+         currentIndex:-2
+      }
+  },
   computed:{
       ...mapState({
           categoryList:state=>state.home.categoryList
@@ -73,6 +85,21 @@ export default {
               })
           } 
           
+      },
+      showNextItem:throttle(function(index){
+          if(this.currentIndex!==-2){
+             this.currentIndex=index
+          }
+      },200),
+      showItems(){
+          this.currentIndex=-1;
+          this.isShowItem=true
+      },
+      hideItems(){
+          this.currentIndex=-2
+          if(this.$route.path !=='/'){
+              this.isShowItem=false
+          }
       }
   }
 }
@@ -118,7 +145,13 @@ export default {
                 position: absolute;
                 background: #fafafa;
                 z-index: 999;
-
+                &.slide-enter-active,&.slide-leave-active{
+                    transition: all .3s;
+                }
+                &.slide-enter,&.slide-leave-to{
+                    height:0;
+                    opacity: 0;
+                }
                 .all-sort-list2 {
                     .item {
                         h3 {
@@ -188,7 +221,8 @@ export default {
                             }
                         }
 
-                        &:hover {
+                        &.active {
+                            background: skyblue;
                             .item-list {
                                 display: block;
                             }
