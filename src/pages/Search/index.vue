@@ -41,11 +41,15 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:orderArr[0]==='1'}" @click="setOrder('1')">
+                  <a href="javascript:">综合
+                    <i class='iconfont' :class="orderArr[1]==='desc' ?'icon-xiangxia' : 'icon-Group-' " v-if="orderArr[0]==='1' "></i>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
+                <li :class="{active:orderArr[0]==='3'}" @click="setOrder('3')">
+                  <a href="javascript:">销量
+                    <i class="iconfont" :class="orderArr[1]==='desc' ? 'icon-xiangxia ' : 'icon-Group-' " v-if="orderArr[0]==='3' "></i>
+                  </a>
                 </li>
                 <li>
                   <a href="#">新品</a>
@@ -53,12 +57,12 @@
                 <li>
                   <a href="#">评价</a>
                 </li>
-                <li>
-                  <a href="#">价格⬆</a>
+                <li :class="{active:orderArr[0]==='2'}"  @click="setOrder('2')">
+                  <a href="javascript:">价格
+                    <i class="iconfont" :class="orderArr[1]==='desc' ? 'icon-xiangxia'  : 'icon-Group-' " v-if="orderArr[0]==='2' "></i>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">价格⬇</a>
-                </li>
+               
               </ul>
             </div>
           </div>
@@ -92,35 +96,7 @@
               
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+         <Pagination :currentPage="options.pageNo" :total="total" :pageSize="options.pageSize"  :showPageNo='3' @currentChange="currentChange"></Pagination>
         </div>
       </div>
     </div>
@@ -143,13 +119,16 @@ import { mapGetters } from 'vuex'
            trademark:'',
            props:[],
            pageNo:1,
-           pageSize:10,
-           order:''
+           pageSize:4,
+           order:'1:desc'
          }
       }
     },
     computed:{
-       ...mapGetters(['goodsList'])
+       ...mapGetters(['goodsList','total']),
+        orderArr(){
+        return this.options.order.split(':')
+      },
     },
     
     methods:{
@@ -189,11 +168,13 @@ import { mapGetters } from 'vuex'
       },
       setTrademark(trademark){
         if(this.options.trademark===trademark) return
-        this.options.trademark=trademark;
+        // this.options.trademark=trademark;
+        this.$set(this.options,'trademark',trademark)
         this.searchList()
       },
       removeTrademark(){
-        this.options.trademark="";
+        // this.options.trademark="";
+        this.$delete(this.options,'trademark')
         this.searchList()
       },
       addProp(prop){
@@ -206,6 +187,22 @@ import { mapGetters } from 'vuex'
         this.options.props.splice(index,1)
         this.searchList()
 
+      },
+     
+      setOrder(orderFlag){
+         let [flag,type]=this.orderArr;
+         if(orderFlag===flag){
+           type=type==='desc' ? 'asc' : 'desc'
+         }else{
+           flag=orderFlag;
+           type='desc'
+         }
+         this.options.order=flag+':'+type;
+         this.searchList()
+      },
+      currentChange(page){
+        this.options.pageNo=page;
+        this.searchList()
       }
     },
     watch:{

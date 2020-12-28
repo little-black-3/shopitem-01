@@ -11,6 +11,11 @@ const mutations={
 };
 const actions={
     async searchList({commit},options){
+        options={...options};
+        Object.keys(options).forEach(key=>{
+            if(options[key]==='' || (Array.isArray(options[key]) && options[key].length===0))
+            delete options[key]
+        })
         const result=await reqSearchList(options);
         if(result.code===200){
            commit('SEARCH_LIST',result.data)
@@ -26,6 +31,9 @@ const getters={
     },
     trademarkList(state){
         return state.searchList.trademarkList ||[]
+    },
+    total(state){
+       return state.searchList.total ||0
     }
 };
 
