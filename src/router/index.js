@@ -17,6 +17,17 @@ VueRouter.prototype.push=function push(location,onResolve,onReject){
         return Promise.reject(err)
     })
 }
+VueRouter.prototype.replace=function replace(location,onResolve,onReject){
+    if(onResolve || onReject){
+        return originalPush.call(this,location,onResolve,onReject)
+    }
+    return originalPush.call(this,location).catch(err=>{
+        if(VueRouter.isNavigationFailure(err)){
+            return err
+        }
+        return Promise.reject(err)
+    })
+}
 
 export default new VueRouter({
     mode:'history',

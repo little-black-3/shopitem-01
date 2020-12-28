@@ -1,4 +1,5 @@
 import ajax from './ajax';
+import mockAjax from './mockAjax'
 
 export function reqCategoryList(){
     return ajax({
@@ -7,3 +8,8 @@ export function reqCategoryList(){
     })
 }
 export const reqBannerList=()=>ajax({url:'/cms/banner'})
+
+export const reqRecommendList=()=>mockAjax('/recommend');
+export const reqFloorList=()=>mockAjax('/floor');
+
+export const reqSearchList=(options)=>ajax.post('/list',options)

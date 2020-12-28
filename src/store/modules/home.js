@@ -1,9 +1,15 @@
-import {reqCategoryList,reqBannerList} from '@/api'
+import {
+    reqCategoryList,
+    reqBannerList,
+    reqRecommendList,
+    reqFloorList
+} from '@/api'
 
 const state={
     categoryList:[],
-    bannerList:[]
-    
+    bannerList:[],
+    recommendList:[],
+    floorList:[]
 };
 const mutations={
      CATEGORY_LIST(state,categoryList){
@@ -11,6 +17,12 @@ const mutations={
      },
      BANNER_LIST(state,bannerList){
          state.bannerList=bannerList
+     },
+     RECOMMEND_LIST(state,recommendList){
+         state.recommendList=recommendList
+     },
+     FLOOR_LIST(state,floorList){
+         state.floorList=floorList
      }
 };
 const actions={
@@ -26,6 +38,20 @@ const actions={
        if(result.code===200){
            const bannerList=result.data;
            commit('BANNER_LIST',bannerList)
+       }
+   },
+   async recommendList({commit}){
+       const result=await reqRecommendList();
+       if(result.code===200){
+        //    console.log(result)
+           const recommentList=result.data;
+           commit('RECOMMEND_LIST',recommentList)
+       }
+   },
+   async floorList({commit}){
+       const result=await reqFloorList()
+       if(result.code===200){
+           commit('FLOOR_LIST',result.data)
        }
    }
 };

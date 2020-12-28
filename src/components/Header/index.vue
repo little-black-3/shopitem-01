@@ -55,15 +55,20 @@ export default {
       keyword:''
     }
   },
+  mounted(){
+    this.$bus.$on('removeKeyword',()=>{
+      this.keyword=""
+    })
+  },
   methods:{
     search(){
 
       const location ={
-        name:'search'
+        name:'search',
+        query:this.$route.query
       }
       if(this.keyword){
         location.params={keyword:this.keyword};
-        location.query={keyword2:this.keyword.toUpperCase()}
       }
       this.$router.push(location)
     }

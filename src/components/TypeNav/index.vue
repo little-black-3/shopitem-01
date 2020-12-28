@@ -81,8 +81,10 @@ export default {
               }
               this.$router.push({
                   name:'search',
-                  query
+                  query,
+                  params:this.$route.params
               })
+              this.hideItems()
           } 
           
       },
