@@ -7,7 +7,8 @@ export function reqCategoryList(){
         method:'GET'
     })
 }
-export const reqBannerList=()=>ajax({url:'/cms/banner'})
+// export const reqBannerList=()=>ajax({url:'/cms/banner'})
+export const reqBannerList=()=>mockAjax({url:'/banners'})
 
 export const reqRecommendList=()=>mockAjax('/recommend');
 export const reqFloorList=()=>mockAjax('/floor');

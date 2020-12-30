@@ -96,7 +96,7 @@
               
             </ul>
           </div>
-         <Pagination :currentPage="options.pageNo" :total="total" :pageSize="options.pageSize"  :showPageNo='3' @currentChange="currentChange"></Pagination>
+         <Pagination :currentPage="options.pageNo" :total="total" :pageSize="options.pageSize"  :showPageNo='3' @currentChange="searchList"></Pagination>
         </div>
       </div>
     </div>
@@ -144,7 +144,8 @@ import { mapGetters } from 'vuex'
           categoryName
         }
       },
-      searchList(){
+      searchList(page=1){
+        this.options.pageNo=page
          this.$store.dispatch('searchList',this.options)
       },
       removeKeyword(){
@@ -200,10 +201,10 @@ import { mapGetters } from 'vuex'
          this.options.order=flag+':'+type;
          this.searchList()
       },
-      currentChange(page){
-        this.options.pageNo=page;
-        this.searchList()
-      }
+      // currentChange(page){
+      //   this.options.pageNo=page;
+      //   this.searchList()
+      // }
     },
     watch:{
       $route:{
